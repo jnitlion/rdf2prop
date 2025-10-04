@@ -1,0 +1,4 @@
+system_id,rdf_path,target_visc_Pa_s,target_cond_Spm,density_per_A3,T_K,chain_len,cation_sigma_A
+N10_demo,data/raw/rdf/N10_demo.csv,0.70,0.85,0.0100,350,10,5.18
+N30_demo,data/raw/rdf/N30_demo.csv,0.40,0.90,0.0095,350,30,5.18
+N50_demo,data/raw/rdf/N50_demo.csv,0.55,0.88,0.0092,350,50,5.18

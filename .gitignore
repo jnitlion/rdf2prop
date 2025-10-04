@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/
+.venv/
+env/
+venv/
+data/processed/
+outputs/
+data/raw/
+!data/raw/rdf/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
