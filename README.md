@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # rdf2prop
 =======
 # rdf2prop — Predict viscosity and conductivity from structure (RDFs)
@@ -20,13 +20,15 @@ The model uses **radial distribution functions (RDFs)**, pair-correlation entrop
 
 Install (recommended: virtual environment):
 
-```bash
 python -m venv .venv && source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-  ## 2) Repository Layout
-```bash
+If requirements.txt doesn’t exist yet, you can generate it with:
+pip freeze > requirements.txt
+
+## 2) Repository Layout
+
 rdf2prop/
   src/
     features/featurize_rdf.py     # converts RDFs to ML features
@@ -46,7 +48,7 @@ rdf2prop/
 
 ## 3) What you must provide
 
-A) RDF files (one per state point)
+### A) RDF files (one per state point)
 
 Each RDF file should contain two columns only:
 | Column | Unit          | Description         |
@@ -67,7 +69,7 @@ r,g
 The header must be exactly r,g.
 The grid can vary across files — the featurizer will interpolate them onto a uniform grid.
 
-B) A labels file (data/meta/labels.csv)
+### B) A labels file (data/meta/labels.csv)
 One row per state point.
 This connects each RDF to its metadata and target values.
 
@@ -94,7 +96,7 @@ If you only want to predict viscosity, target_cond_Spm can be blank (and vice ve
 
 ## 4) Step-by-step workflow
 
-Step 1 — Featurize RDFs
+### Step 1 — Featurize RDFs
 This converts each RDF into numerical features (interpolated g(r), S₂, coordination number, etc.) and writes them to a single table.
 python src/features/featurize_rdf.py \
   --labels data/meta/labels.csv \
@@ -107,7 +109,7 @@ Arguments:
 --nbins — number of bins from 0→rmax (e.g., 240 ≈ 0.05 Å spacing)
 Output: data/processed/features.csv
 
-Step 2 — Train & evaluate models
+### Step 2 — Train & evaluate models
 Train separate models for viscosity and conductivity.
 A) Predict viscosity
 python src/models/train_baseline.py \
