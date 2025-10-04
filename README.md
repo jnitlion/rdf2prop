@@ -13,8 +13,8 @@ The model uses **radial distribution functions (RDFs)**, pair-correlation entrop
 
 ---
 
-**## 1) Requirements
-**
+## 1) Requirements
+
 - Python ≥ 3.9  
 - Packages: `numpy, pandas, scipy, scikit-learn, xgboost, matplotlib, shap`
 
@@ -25,8 +25,8 @@ python -m venv .venv && source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-## 2) Repository Layout
-
+  ## 2) Repository Layout
+```bash
 rdf2prop/
   src/
     features/featurize_rdf.py     # converts RDFs to ML features
