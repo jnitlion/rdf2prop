@@ -13,8 +13,8 @@ The model uses **radial distribution functions (RDFs)**, pair-correlation entrop
 
 ---
 
-## 1) Requirements
-
+**## 1) Requirements
+**
 - Python ≥ 3.9  
 - Packages: `numpy, pandas, scipy, scikit-learn, xgboost, matplotlib, shap`
 
