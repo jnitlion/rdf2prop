@@ -20,31 +20,31 @@ The model uses **radial distribution functions (RDFs)**, pair-correlation entrop
 
 Install (recommended: virtual environment):
 
-python -m venv .venv && source .venv/bin/activate
-python -m pip install --upgrade pip
+python -m venv .venv && source .venv/bin/activate  
+python -m pip install --upgrade pip  
 pip install -r requirements.txt
 
-If requirements.txt doesn’t exist yet, you can generate it with:
+If requirements.txt doesn’t exist yet, you can generate it with:  
 pip freeze > requirements.txt
 
 ## 2) Repository Layout
 
-rdf2prop/
-  src/
-    features/featurize_rdf.py     # converts RDFs to ML features
-    models/train_baseline.py      # trains and evaluates ML models
-  data/
-    meta/
-      labels.csv                  # you provide this (see below)
-    raw/
-      rdf/
-        *.csv                     # one RDF per state point (columns r,g)
-    processed/
-      features.csv                # created by featurizer
-  outputs/                         # model results (plots, metrics, predictions)
-  requirements.txt
-  LICENSE
-  README.md
+rdf2prop/  
+  src/  
+    features/featurize_rdf.py     # converts RDFs to ML features  
+    models/train_baseline.py      # trains and evaluates ML models  
+  data/  
+    meta/  
+      labels.csv                  # you provide this (see below)  
+    raw/  
+      rdf/  
+        *.csv                     # one RDF per state point (columns r,g)  
+    processed/  
+      features.csv                # created by featurizer  
+  outputs/                         # model results (plots, metrics, predictions)  
+  requirements.txt  
+  LICENSE  
+  README.md  
 
 ## 3) What you must provide
 
@@ -56,21 +56,21 @@ Each RDF file should contain two columns only:
 | `r`    | Å             | distance grid       |
 | `g`    | dimensionless | total RDF at each r |
 
-Example RDF (data/raw/rdf/cL10_s5.18_T350.csv):
-r,g
-0.00,0.00
-0.05,0.12
-0.10,0.65
-0.15,1.40
-0.20,1.10
-0.25,1.02
-0.30,1.00
+Example RDF (data/raw/rdf/cL10_s5.18_T350.csv):  
+r,g  
+0.00,0.00  
+0.05,0.12  
+0.10,0.65  
+0.15,1.40  
+0.20,1.10  
+0.25,1.02  
+0.30,1.00  
 
-The header must be exactly r,g.
+The header must be exactly r,g.  
 The grid can vary across files — the featurizer will interpolate them onto a uniform grid.
 
 ### B) A labels file (data/meta/labels.csv)
-One row per state point.
+One row per state point.  
 This connects each RDF to its metadata and target values.
 
 Required columns:
@@ -87,52 +87,52 @@ Required columns:
 
 Example:
 
-system_id,rdf_path,target_visc_Pa_s,target_cond_Spm,density_per_A3,T_K,chain_len,cation_sigma_A
-cL10_s5.18_T350,data/raw/rdf/cL10_s5.18_T350.csv,0.62,0.80,0.01010,350,10,5.18
-cL30_s5.18_T350,data/raw/rdf/cL30_s5.18_T350.csv,0.40,0.90,0.00950,350,30,5.18
-cL50_s5.18_T350,data/raw/rdf/cL50_s5.18_T350.csv,0.55,0.88,0.00920,350,50,5.18
+system_id,rdf_path,target_visc_Pa_s,target_cond_Spm,density_per_A3,T_K,chain_len,cation_sigma_A  
+cL10_s5.18_T350,data/raw/rdf/cL10_s5.18_T350.csv,0.62,0.80,0.01010,350,10,5.18  
+cL30_s5.18_T350,data/raw/rdf/cL30_s5.18_T350.csv,0.40,0.90,0.00950,350,30,5.18  
+cL50_s5.18_T350,data/raw/rdf/cL50_s5.18_T350.csv,0.55,0.88,0.00920,350,50,5.18  
 
 If you only want to predict viscosity, target_cond_Spm can be blank (and vice versa).
 
 ## 4) Step-by-step workflow
 
 ### Step 1 — Featurize RDFs
-This converts each RDF into numerical features (interpolated g(r), S₂, coordination number, etc.) and writes them to a single table.
-python src/features/featurize_rdf.py \
-  --labels data/meta/labels.csv \
-  --out data/processed/features.csv \
-  --rmax 12.0 \
+This converts each RDF into numerical features (interpolated g(r), S₂, coordination number, etc.) and writes them to a single table.  
+python src/features/featurize_rdf.py \  
+  --labels data/meta/labels.csv \  
+  --out data/processed/features.csv \  
+  --rmax 12.0 \  
   --nbins 240
 
-Arguments:
---rmax — maximum r to include (Å)
---nbins — number of bins from 0→rmax (e.g., 240 ≈ 0.05 Å spacing)
-Output: data/processed/features.csv
+Arguments:  
+--rmax — maximum r to include (Å)  
+--nbins — number of bins from 0→rmax (e.g., 240 ≈ 0.05 Å spacing)  
+Output: data/processed/features.csv  
 
 ### Step 2 — Train & evaluate models
-Train separate models for viscosity and conductivity.
-A) Predict viscosity
-python src/models/train_baseline.py \
-  --features data/processed/features.csv \
-  --target target_visc_ln \
-  --group_by chain_len \
-  --outdir outputs/visc_loco_chain
-B) Predict conductivity
-python src/models/train_baseline.py \
-  --features data/processed/features.csv \
-  --target target_cond_ln \
-  --group_by chain_len \
-  --outdir outputs/cond_loco_chain
+Train separate models for viscosity and conductivity.  
+A) Predict viscosity  
+python src/models/train_baseline.py \  
+  --features data/processed/features.csv \  
+  --target target_visc_ln \  
+  --group_by chain_len \  
+  --outdir outputs/visc_loco_chain  
+B) Predict conductivity  
+python src/models/train_baseline.py \  
+  --features data/processed/features.csv \  
+  --target target_cond_ln \  
+  --group_by chain_len \  
+  --outdir outputs/cond_loco_chain  
 
-Options:
---target: choose either target_visc_ln or target_cond_ln
---group_by: variable to define “leave-one-group-out” splits (e.g., chain_len, cation_sigma_A, or T_K)
---outdir: where results are saved
-If all samples share the same group value, the script automatically switches to standard KFold CV.
+Options:  
+--target: choose either target_visc_ln or target_cond_ln  
+--group_by: variable to define “leave-one-group-out” splits (e.g., chain_len, cation_sigma_A, or T_K)  
+--outdir: where results are saved  
+If all samples share the same group value, the script automatically switches to standard KFold CV.  
 
 ## 5) Ouputs
 
-After training, you’ll find these files inside your chosen --outdir:
+After training, you’ll find these files inside your chosen --outdir:  
 | File                                    | Description                                      |
 | --------------------------------------- | ------------------------------------------------ |
 | `metrics_<model>_<target>_<split>.json` | Overall & per-fold metrics in log and real units |
@@ -140,8 +140,8 @@ After training, you’ll find these files inside your chosen --outdir:
 | `parity_real_<...>.png`                 | Parity plot in real units (Pa·s or S/m)          |
 | `cv_predictions_<...>.csv`              | Out-of-fold predictions for every sample         |
 
-Metrics reported include:
-MAE_log, RMSE_log, R²_log
+Metrics reported include:  
+MAE_log, RMSE_log, R²_log  
 MAE_real, MAPE_real, MedAPE_real, P90APE_real
 
 ## 6) How to interpret results
@@ -152,10 +152,10 @@ MAE_real, MAPE_real, MedAPE_real, P90APE_real
 | **R²_log**                  | Fit quality in log-space (closer to 1 is better).                                                                                                   |
 | **MAPE_real / MedAPE_real** | Mean or median absolute % error in real units (lower is better).                                                                                    |
 
-Rule of thumb:
-Excellent: R² ≥ 0.8, MedAPE ≤ 25%
-Good: R² ≈ 0.6–0.8, MedAPE ≤ 40%
-Fair: R² < 0.6 — consider adding data or structural features.
+Rule of thumb:  
+Excellent: R² ≥ 0.8, MedAPE ≤ 25%  
+Good: R² ≈ 0.6–0.8, MedAPE ≤ 40%  
+Fair: R² < 0.6 — consider adding data or structural features.  
 
 ## 7) Troubleshooting
 
@@ -169,12 +169,12 @@ Fair: R² < 0.6 — consider adding data or structural features.
 
 ## 8) Reproducibility & tips
 
-Keep one row per condition (average replicates).
-Record all metadata (temperature, density, structural parameters).
-Default settings --rmax 12 --nbins 240 work well for most coarse-grained RDFs.
-Use separate training runs for viscosity and conductivity.
-Check parity plots for systematic biases (e.g., underprediction at high viscosity).
-You can rerun with different --group_by variables to test model transferability.
+Keep one row per condition (average replicates).  
+Record all metadata (temperature, density, structural parameters).  
+Default settings --rmax 12 --nbins 240 work well for most coarse-grained RDFs.  
+Use separate training runs for viscosity and conductivity.  
+Check parity plots for systematic biases (e.g., underprediction at high viscosity).  
+You can rerun with different --group_by variables to test model transferability.  
 
 ## 9) License
 MIT License — see LICENSE for full text.
