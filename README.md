@@ -60,6 +60,7 @@ Each RDF file should contain two columns only:
 | `g`    | dimensionless | total RDF at each r |
 
 Example RDF (data/raw/rdf/cL10_s5.18_T350.csv):  
+```
 r,g  
 0.00,0.00  
 0.05,0.12  
@@ -68,7 +69,7 @@ r,g
 0.20,1.10  
 0.25,1.02  
 0.30,1.00  
-
+```
 > The header must be exactly r,g.  
 > The grid can vary across files — the featurizer will interpolate them onto a uniform grid.
 
