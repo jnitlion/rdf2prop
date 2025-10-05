@@ -85,7 +85,7 @@ Required columns:
 | `density_per_A3`   | number density (Å⁻³)                                          |
 | `T_K`              | temperature (K)                                               |
 | `chain_len`        | polymer chain length (or other structural variable)           |
-| `cation_sigma_A`   | cation size (Å)                                               |
+| `cation_sigma_A`   | cation size (Å) (or other structural variable)                |
 | `target_visc_Pa_s` | viscosity (Pa·s) *(optional if training conductivity)*        |
 | `target_cond_Spm`  | conductivity (S/m) *(optional if training viscosity)*         |
 
